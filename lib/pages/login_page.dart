@@ -44,7 +44,7 @@ class _MyHomePageState extends State<MyHomePage> {
         titleColor: Colors.black,
         messageColor: Colors.black,
         borderRadius: BorderRadius.circular(20),
-        margin: EdgeInsets.only(left: 8, right: 8),
+        margin: const EdgeInsets.only(left: 8, right: 8),
         duration: const Duration(seconds: 3),
       ).show(context);
     } else {
@@ -53,14 +53,14 @@ class _MyHomePageState extends State<MyHomePage> {
       }
 
       try {
-        await service.login(
+        var jwt = await service.login(
             emailController.text, passwordEditingController.text);
 
         changeLoading();
         Navigator.push(
             context,
             CupertinoPageRoute(
-              builder: (context) => HomePage(),
+              builder: (context) => HomePage(jwt: jwt),
             ));
       } catch (e) {
         changeLoading();
@@ -75,7 +75,7 @@ class _MyHomePageState extends State<MyHomePage> {
           titleColor: Colors.black,
           messageColor: Colors.black,
           borderRadius: BorderRadius.circular(20),
-          margin: EdgeInsets.only(left: 8, right: 8),
+          margin: const EdgeInsets.only(left: 8, right: 8),
           duration: const Duration(seconds: 3),
         ).show(context);
       }
@@ -96,127 +96,125 @@ class _MyHomePageState extends State<MyHomePage> {
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
           child: SingleChildScrollView(
-            child: Container(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Hero(
-                        tag: "tag::hero",
-                        child: Align(
-                            alignment: Alignment.topRight,
-                            child: Lottie.asset('assets/login_loader.json')),
-                      ),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Hero(
+                      tag: "tag::hero",
+                      child: Align(
+                          alignment: Alignment.topRight,
+                          child: Lottie.asset('assets/login_loader.json')),
                     ),
-                    const Text(
-                      "Login",
-                      style: TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.bold,
-                      ),
+                  ),
+                  const Text(
+                    "Login",
+                    style: TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
                     ),
-                    const SizedBox(
-                      height: 16,
+                  ),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  const Text(
+                    "Coloque seus dados para continuar",
+                    style: TextStyle(
+                      fontSize: 16,
                     ),
-                    const Text(
-                      "Coloque seus dados para continuar",
-                      style: TextStyle(
-                        fontSize: 16,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 32,
-                    ),
-                    CustomTextField(
-                      label: "Email",
-                      hint: "email@email.com",
-                      controller: emailController,
-                      icon: Icons.person_outline,
-                      obscureText: false,
-                    ),
-                    const SizedBox(
-                      height: 32,
-                    ),
-                    CustomTextField(
-                      label: "Senha",
-                      hint: "*******",
-                      obscureText: true,
-                      icon: Icons.lock_outline,
-                      controller: passwordEditingController,
-                    ),
-                    const SizedBox(
-                      height: 32,
-                    ),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: ElevatedButton(
-                          onPressed: () {
-                            login();
-                          },
-                          style: ButtonStyle(
-                            shape: MaterialStateProperty.all<
-                                RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(18.0),
-                              ),
+                  ),
+                  const SizedBox(
+                    height: 32,
+                  ),
+                  CustomTextField(
+                    label: "Email",
+                    hint: "email@email.com",
+                    controller: emailController,
+                    icon: Icons.person_outline,
+                    obscureText: false,
+                  ),
+                  const SizedBox(
+                    height: 32,
+                  ),
+                  CustomTextField(
+                    label: "Senha",
+                    hint: "*******",
+                    obscureText: true,
+                    icon: Icons.lock_outline,
+                    controller: passwordEditingController,
+                  ),
+                  const SizedBox(
+                    height: 32,
+                  ),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: ElevatedButton(
+                        onPressed: () {
+                          login();
+                        },
+                        style: ButtonStyle(
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18.0),
                             ),
                           ),
-                          child: AnimatedContainer(
-                            duration: Duration(milliseconds: 350),
-                            child: loading
-                                ? const SizedBox(
-                                    height: 16,
-                                    width: 16,
-                                    child: CircularProgressIndicator())
-                                : Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: const [
-                                      Text(
-                                        "Entrar",
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                      SizedBox(
-                                        width: 16,
-                                      ),
-                                      Icon(
-                                        Icons.arrow_forward_outlined,
-                                        size: 20,
-                                      )
-                                    ],
-                                  ),
-                          )),
+                        ),
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 350),
+                          child: loading
+                              ? const SizedBox(
+                                  height: 16,
+                                  width: 16,
+                                  child: CircularProgressIndicator())
+                              : Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: const [
+                                    Text(
+                                      "Entrar",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    SizedBox(
+                                      width: 16,
+                                    ),
+                                    Icon(
+                                      Icons.arrow_forward_outlined,
+                                      size: 20,
+                                    )
+                                  ],
+                                ),
+                        )),
+                  ),
+                  const SizedBox(
+                    height: 64,
+                  ),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text("Não possui conta? "),
+                        GestureDetector(
+                          onTap: () => Navigator.push(
+                              context,
+                              CupertinoPageRoute(
+                                builder: (context) => const SignUp(),
+                              )),
+                          child: const Text(
+                            "Cadastrar",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.green),
+                          ),
+                        )
+                      ],
                     ),
-                    const SizedBox(
-                      height: 64,
-                    ),
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text("Não possui conta? "),
-                          GestureDetector(
-                            onTap: () => Navigator.push(
-                                context,
-                                CupertinoPageRoute(
-                                  builder: (context) => SignUp(),
-                                )),
-                            child: const Text(
-                              "Cadastrar",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.green),
-                            ),
-                          )
-                        ],
-                      ),
-                    )
-                  ],
-                ),
+                  )
+                ],
               ),
             ),
           ),

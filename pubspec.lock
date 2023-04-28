@@ -104,6 +104,13 @@ packages:
       url: "https://dart.cloudsmith.io/n26-brasil/building-blocks-dart/"
     source: hosted
     version: "2.0.1"
+  flutter_masked_text2:
+    dependency: "direct main"
+    description:
+      name: flutter_masked_text2
+      url: "https://dart.cloudsmith.io/n26-brasil/building-blocks-dart/"
+    source: hosted
+    version: "0.9.1"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -130,6 +137,13 @@ packages:
       url: "https://dart.cloudsmith.io/n26-brasil/building-blocks-dart/"
     source: hosted
     version: "2.0.1"
+  loading_animation_widget:
+    dependency: "direct main"
+    description:
+      name: loading_animation_widget
+      url: "https://dart.cloudsmith.io/n26-brasil/building-blocks-dart/"
+    source: hosted
+    version: "1.2.0+4"
   lottie:
     dependency: "direct main"
     description:
@@ -158,6 +172,13 @@ packages:
       url: "https://dart.cloudsmith.io/n26-brasil/building-blocks-dart/"
     source: hosted
     version: "1.8.0"
+  page_transition:
+    dependency: "direct main"
+    description:
+      name: page_transition
+      url: "https://dart.cloudsmith.io/n26-brasil/building-blocks-dart/"
+    source: hosted
+    version: "2.0.9"
   path:
     dependency: transitive
     description:

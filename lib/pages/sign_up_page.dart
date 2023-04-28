@@ -1,8 +1,6 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:lottie/lottie.dart';
 import 'package:tcc_impacta/service/sign_up_service.dart';
 import 'package:tcc_impacta/widgets/custom_text_field.dart';
@@ -47,7 +45,7 @@ class _SignUpState extends State<SignUp> {
         titleColor: Colors.black,
         messageColor: Colors.black,
         borderRadius: BorderRadius.circular(20),
-        margin: EdgeInsets.only(left: 8, right: 8),
+        margin: const EdgeInsets.only(left: 8, right: 8),
         duration: const Duration(seconds: 5),
       ).show(context);
     }
@@ -63,7 +61,7 @@ class _SignUpState extends State<SignUp> {
         titleColor: Colors.black,
         messageColor: Colors.black,
         borderRadius: BorderRadius.circular(20),
-        margin: EdgeInsets.only(left: 8, right: 8),
+        margin: const EdgeInsets.only(left: 8, right: 8),
         duration: const Duration(seconds: 3),
       ).show(context);
       return;
@@ -82,7 +80,7 @@ class _SignUpState extends State<SignUp> {
         titleColor: Colors.black,
         messageColor: Colors.black,
         borderRadius: BorderRadius.circular(20),
-        margin: EdgeInsets.only(left: 8, right: 8),
+        margin: const EdgeInsets.only(left: 8, right: 8),
         duration: const Duration(seconds: 3),
       ).show(context);
     } else {
@@ -101,7 +99,7 @@ class _SignUpState extends State<SignUp> {
         Navigator.push(
             context,
             CupertinoPageRoute(
-              builder: (context) => Scaffold(),
+              builder: (context) => const Scaffold(),
             ));
       } catch (e) {
         changeLoading();
@@ -116,7 +114,7 @@ class _SignUpState extends State<SignUp> {
           titleColor: Colors.black,
           messageColor: Colors.black,
           borderRadius: BorderRadius.circular(20),
-          margin: EdgeInsets.only(left: 8, right: 8),
+          margin: const EdgeInsets.only(left: 8, right: 8),
           duration: const Duration(seconds: 3),
         ).show(context);
       }
@@ -131,142 +129,139 @@ class _SignUpState extends State<SignUp> {
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
           child: SingleChildScrollView(
-            child: Container(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      IconButton(
+                        onPressed: () => Navigator.pop(context),
+                        icon: const Icon(
+                          Icons.arrow_back,
+                          color: Colors.black,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Hero(
+                          tag: "tag::hero",
+                          child: Align(
+                              alignment: Alignment.topRight,
+                              child: Lottie.asset('assets/login_loader.json')),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Text(
+                    "Criar conta",
+                    style: TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 32,
+                  ),
+                  CustomTextField(
+                    label: "Nome",
+                    hint: "Tony Stark",
+                    controller: nameController,
+                    icon: Icons.person_outline,
+                    obscureText: false,
+                  ),
+                  const SizedBox(
+                    height: 32,
+                  ),
+                  CustomTextField(
+                    label: "Email",
+                    hint: "email@email.com",
+                    controller: emailController,
+                    icon: Icons.mail_outline,
+                    obscureText: false,
+                  ),
+                  const SizedBox(
+                    height: 32,
+                  ),
+                  CustomTextField(
+                    label: "Senha",
+                    hint: "*******",
+                    obscureText: true,
+                    icon: Icons.lock_outline,
+                    controller: passwordEditingController,
+                  ),
+                  const SizedBox(
+                    height: 32,
+                  ),
+                  CustomTextField(
+                    label: "Confirmar senha",
+                    hint: "*******",
+                    obscureText: true,
+                    icon: Icons.lock_outline,
+                    controller: confirmPasswordEditingController,
+                  ),
+                  const SizedBox(
+                    height: 32,
+                  ),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: ElevatedButton(
+                        onPressed: () => registerUser(),
+                        style: ButtonStyle(
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18.0),
+                            ),
+                          ),
+                        ),
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 350),
+                          child: loading
+                              ? const SizedBox(
+                                  height: 16,
+                                  width: 16,
+                                  child: CircularProgressIndicator())
+                              : Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: const [
+                                    Text("Entrar"),
+                                    SizedBox(
+                                      width: 16,
+                                    ),
+                                    Icon(
+                                      Icons.arrow_forward_outlined,
+                                      size: 20,
+                                    )
+                                  ],
+                                ),
+                        )),
+                  ),
+                  const SizedBox(
+                    height: 64,
+                  ),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        IconButton(
-                          onPressed: () => Navigator.pop(context),
-                          icon: const Icon(
-                            Icons.arrow_back,
-                            color: Colors.black,
+                        const Text("Ja possui conta? "),
+                        GestureDetector(
+                          onTap: () => Navigator.pop(context),
+                          child: const Text(
+                            "Logar",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.green),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Hero(
-                            tag: "tag::hero",
-                            child: Align(
-                                alignment: Alignment.topRight,
-                                child:
-                                    Lottie.asset('assets/login_loader.json')),
-                          ),
-                        ),
+                        )
                       ],
                     ),
-                    const Text(
-                      "Criar conta",
-                      style: TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 32,
-                    ),
-                    CustomTextField(
-                      label: "Nome",
-                      hint: "Tony Stark",
-                      controller: nameController,
-                      icon: Icons.person_outline,
-                      obscureText: false,
-                    ),
-                    const SizedBox(
-                      height: 32,
-                    ),
-                    CustomTextField(
-                      label: "Email",
-                      hint: "email@email.com",
-                      controller: emailController,
-                      icon: Icons.mail_outline,
-                      obscureText: false,
-                    ),
-                    const SizedBox(
-                      height: 32,
-                    ),
-                    CustomTextField(
-                      label: "Senha",
-                      hint: "*******",
-                      obscureText: true,
-                      icon: Icons.lock_outline,
-                      controller: passwordEditingController,
-                    ),
-                    const SizedBox(
-                      height: 32,
-                    ),
-                    CustomTextField(
-                      label: "Confirmar senha",
-                      hint: "*******",
-                      obscureText: true,
-                      icon: Icons.lock_outline,
-                      controller: confirmPasswordEditingController,
-                    ),
-                    const SizedBox(
-                      height: 32,
-                    ),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: ElevatedButton(
-                          onPressed: () => registerUser(),
-                          style: ButtonStyle(
-                            shape: MaterialStateProperty.all<
-                                RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(18.0),
-                              ),
-                            ),
-                          ),
-                          child: AnimatedContainer(
-                            duration: Duration(milliseconds: 350),
-                            child: loading
-                                ? const SizedBox(
-                                    height: 16,
-                                    width: 16,
-                                    child: CircularProgressIndicator())
-                                : Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: const [
-                                      Text("Entrar"),
-                                      SizedBox(
-                                        width: 16,
-                                      ),
-                                      Icon(
-                                        Icons.arrow_forward_outlined,
-                                        size: 20,
-                                      )
-                                    ],
-                                  ),
-                          )),
-                    ),
-                    const SizedBox(
-                      height: 64,
-                    ),
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text("Ja possui conta? "),
-                          GestureDetector(
-                            onTap: () => Navigator.pop(context),
-                            child: const Text(
-                              "Logar",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.green),
-                            ),
-                          )
-                        ],
-                      ),
-                    )
-                  ],
-                ),
+                  )
+                ],
               ),
             ),
           ),

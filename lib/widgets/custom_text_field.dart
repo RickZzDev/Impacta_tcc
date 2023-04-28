@@ -7,6 +7,7 @@ class CustomTextField extends StatefulWidget {
   Function? onFocus;
   final IconData icon;
   TextEditingController controller;
+  final TextInputType keyboardType;
 
   CustomTextField(
       {super.key,
@@ -14,6 +15,7 @@ class CustomTextField extends StatefulWidget {
       required this.controller,
       required this.hint,
       required this.icon,
+      this.keyboardType = TextInputType.text,
       this.onFocus,
       this.obscureText = false});
 
@@ -47,6 +49,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
       obscureText: widget.obscureText,
       focusNode: _focus,
       controller: widget.controller,
+      keyboardType: widget.keyboardType,
       decoration: InputDecoration(
         prefixIcon: Icon(
           widget.icon,
