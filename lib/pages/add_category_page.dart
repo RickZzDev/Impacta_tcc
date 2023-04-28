@@ -34,16 +34,17 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
 
   create(BuildContext context) async {
     try {
+      var data = Data(
+          title: titleController.text,
+          maxValue: ammountControler.text,
+          createdAt: '',
+          id: 1,
+          debits: [],
+          debitsSum: "");
       changeLoading();
-      await categoryService.create(titleController.text, ammountControler.text);
+      await categoryService.create(data, ammountControler.numberValue);
       widget.successCallBack(
-        Data(
-            title: titleController.text,
-            maxValue: ammountControler.text,
-            createdAt: '',
-            id: 1,
-            debits: [],
-            debitsSum: ""),
+        data,
       );
     } catch (e) {
       changeLoading();
@@ -82,8 +83,8 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
             Align(
               alignment: Alignment.centerRight,
               child: ElevatedButton(
-                  onPressed: () {
-                    create(context);
+                  onPressed: () async {
+                    await create(context);
                     Navigator.pop(context);
                   },
                   style: ButtonStyle(
