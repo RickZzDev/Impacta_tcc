@@ -1,8 +1,10 @@
 import 'package:card_swiper/card_swiper.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:tcc_impacta/pages/add_category_page.dart';
+import 'package:tcc_impacta/pages/add_debits_page.dart';
 import 'package:tcc_impacta/service/categories_dto.dart';
 import 'package:tcc_impacta/service/categories_service.dart';
 
@@ -49,6 +51,36 @@ class _HomePageState extends State<HomePage> {
 
     categories = existingCategories;
     changeLoading();
+  }
+
+  void addDebit(
+    String name,
+    String value,
+    int index,
+  ) {
+    setState(() {
+      categories.data[index].debits.add(Debits(
+          id: 0,
+          categoryId: 0,
+          title: name,
+          value: value,
+          createdAt: "",
+          updatedAt: ""));
+    });
+  }
+
+  double getValue(Data data) {
+    return double.parse(data.maxValue) -
+        double.parse(data.debitsSum.replaceAll(",", "."));
+  }
+
+  Future<void> navToDebitsAddPage(int index) async {
+    await Navigator.of(context).push(CupertinoPageRoute(
+      builder: (context) => AddDebitsPage(
+        addDebit: addDebit,
+        index: index,
+      ),
+    ));
   }
 
   @override
@@ -98,23 +130,38 @@ class _HomePageState extends State<HomePage> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(categories.data[index].title),
-                                Text(categories.data[index].maxValue)
+                                Text(
+                                  getValue(categories.data[index]).toString(),
+                                  style: TextStyle(
+                                      color:
+                                          getValue(categories.data[index]) < 0
+                                              ? Colors.red
+                                              : Colors.green),
+                                )
                               ],
                             ),
                             // subtitle: Text('Trailing expansion arrow icon'),
                             children: <Widget>[
                               ListTile(
-                                title: ListView.builder(
-                                  shrinkWrap: true,
-                                  itemCount: categories
-                                          .data[index].debits.isEmpty
-                                      ? 1
-                                      : categories.data[index].debits.length,
-                                  itemBuilder: (context, internalIndex) => Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children:
-                                        categories.data[index].debits.isEmpty
+                                  title: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  ListView.builder(
+                                    shrinkWrap: true,
+                                    itemCount: categories
+                                            .data[index].debits.isEmpty
+                                        ? 1
+                                        : categories.data[index].debits.length,
+                                    itemBuilder: (context, internalIndex) =>
+                                        Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 8.0),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: categories
+                                                .data[index].debits.isEmpty
                                             ? [
                                                 const Text(
                                                     "Sem gastos para essa categoria")
@@ -130,9 +177,22 @@ class _HomePageState extends State<HomePage> {
                                                       color: Colors.red),
                                                 )
                                               ],
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ),
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: IconButton(
+                                      onPressed: () =>
+                                          navToDebitsAddPage(index),
+                                      icon: Icon(
+                                        Icons.add,
+                                        color: Theme.of(context).primaryColor,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )),
                             ],
                           ),
                         ),
