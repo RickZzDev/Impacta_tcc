@@ -24,7 +24,7 @@ class Data {
   late String maxValue;
   late String createdAt;
   late List<Debits> debits;
-  late String debitsSum;
+  late double debitsSum;
 
   Data(
       {required this.id,
@@ -45,7 +45,9 @@ class Data {
         debits.add(Debits.fromJson(v));
       });
     }
-    debitsSum = json['debitsSum'];
+    debitsSum = json['debitsSum'] is double
+        ? json['debitsSum']
+        : (json['debitsSum'] as int).toDouble();
   }
 
   Map<String, dynamic> toJson() {

@@ -36,11 +36,11 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
     try {
       var data = Data(
           title: titleController.text,
-          maxValue: ammountControler.text,
+          maxValue: ammountControler.numberValue.toString(),
           createdAt: '',
           id: 1,
           debits: [],
-          debitsSum: "");
+          debitsSum: 0);
       changeLoading();
       await categoryService.create(data, ammountControler.numberValue);
       widget.successCallBack(

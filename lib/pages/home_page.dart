@@ -1,6 +1,7 @@
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:tcc_impacta/pages/add_category_page.dart';
@@ -59,26 +60,62 @@ class _HomePageState extends State<HomePage> {
     int index,
   ) {
     setState(() {
-      categories.data[index].debits.add(Debits(
-          id: 0,
-          categoryId: 0,
-          title: name,
-          value: value,
-          createdAt: "",
-          updatedAt: ""));
+      categories.data[index].debits.add(
+        Debits(
+            id: 0,
+            categoryId: 0,
+            title: name,
+            value: value,
+            createdAt: "",
+            updatedAt: ""),
+      );
+
+      double convertedValue = categories.data[index].debitsSum +
+          double.parse(
+            value.replaceAll(",", "."),
+          );
+
+      categories.data[index].debitsSum = convertedValue;
     });
   }
 
-  double getValue(Data data) {
-    return double.parse(data.maxValue) -
-        double.parse(data.debitsSum.replaceAll(",", "."));
+  MoneyMaskedTextController getValue(Data data) {
+    var maxValue = double.parse(data.maxValue);
+    var value = maxValue - data.debitsSum;
+
+    var money = MoneyMaskedTextController(
+        decimalSeparator: ",",
+        thousandSeparator: ".",
+        leftSymbol: "R\$ ",
+        initialValue: value);
+    return money;
   }
 
-  Future<void> navToDebitsAddPage(int index) async {
+  String getMoneyValue(String poorValue) {
+    var money = MoneyMaskedTextController(
+        decimalSeparator: ",",
+        thousandSeparator: ".",
+        leftSymbol: "R\$ ",
+        initialValue: double.parse(poorValue));
+    return money.text;
+  }
+
+  Widget getCategoryRemainingMoney(Data data) {
+    var maxValue = double.parse(data.maxValue);
+    var value = (maxValue - data.debitsSum);
+
+    return Text(
+      "R\$ ${value.toStringAsFixed(2).replaceAll(".", ",")}",
+      style: TextStyle(color: value <= 0 ? Colors.red : Colors.green),
+    );
+  }
+
+  Future<void> navToDebitsAddPage(int index, String categoryId) async {
     await Navigator.of(context).push(CupertinoPageRoute(
       builder: (context) => AddDebitsPage(
         addDebit: addDebit,
         index: index,
+        categoryid: categoryId,
       ),
     ));
   }
@@ -130,14 +167,8 @@ class _HomePageState extends State<HomePage> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(categories.data[index].title),
-                                Text(
-                                  getValue(categories.data[index]).toString(),
-                                  style: TextStyle(
-                                      color:
-                                          getValue(categories.data[index]) < 0
-                                              ? Colors.red
-                                              : Colors.green),
-                                )
+                                getCategoryRemainingMoney(
+                                    categories.data[index])
                               ],
                             ),
                             // subtitle: Text('Trailing expansion arrow icon'),
@@ -167,12 +198,16 @@ class _HomePageState extends State<HomePage> {
                                                     "Sem gastos para essa categoria")
                                               ]
                                             : [
-                                                Text(categories
-                                                    .data[index]
-                                                    .debits[internalIndex]
-                                                    .title),
                                                 Text(
-                                                  " - ${categories.data[index].debits[internalIndex].value}",
+                                                  categories
+                                                      .data[index]
+                                                      .debits[internalIndex]
+                                                      .title,
+                                                  style: TextStyle(
+                                                      color: Colors.black),
+                                                ),
+                                                Text(
+                                                  " - ${getMoneyValue(categories.data[index].debits[internalIndex].value)}",
                                                   style: const TextStyle(
                                                       color: Colors.red),
                                                 )
@@ -183,8 +218,8 @@ class _HomePageState extends State<HomePage> {
                                   Align(
                                     alignment: Alignment.centerRight,
                                     child: IconButton(
-                                      onPressed: () =>
-                                          navToDebitsAddPage(index),
+                                      onPressed: () => navToDebitsAddPage(index,
+                                          categories.data[index].id.toString()),
                                       icon: Icon(
                                         Icons.add,
                                         color: Theme.of(context).primaryColor,

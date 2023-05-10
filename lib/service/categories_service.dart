@@ -33,6 +33,22 @@ class CategorieService {
     }
   }
 
+  Future<void> launchDebit(
+      String title, String value, String categoryId) async {
+    try {
+      var category = CategoryDto(data: []);
+
+      await dio.post('http://0.0.0.0:80/api/categories/$categoryId/debits',
+          options: Options(headers: header),
+          data: {
+            "title": title,
+            "value": value,
+          });
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<CategoryDto> get(String jwt) async {
     header = {"Accept": "application/json", "Authorization": "Bearer $jwt"};
     try {

@@ -2,12 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
+import 'package:tcc_impacta/service/categories_service.dart';
 import 'package:tcc_impacta/widgets/custom_text_field.dart';
 
 class AddDebitsPage extends StatefulWidget {
   final Function(String, String, int) addDebit;
   final int index;
-  AddDebitsPage({super.key, required this.addDebit, required this.index});
+  final String categoryid;
+  AddDebitsPage(
+      {super.key,
+      required this.addDebit,
+      required this.index,
+      required this.categoryid});
 
   @override
   State<AddDebitsPage> createState() => _AddDebitsPageState();
@@ -21,20 +27,25 @@ class _AddDebitsPageState extends State<AddDebitsPage> {
   var valueController = MoneyMaskedTextController(
       decimalSeparator: ',', thousandSeparator: ".", leftSymbol: "R\$ ");
 
+  final CategorieService categorieService = CategorieService();
+
   Future<void> sendDebit() async {
-    setState(() {
-      loading = true;
-    });
+    try {
+      setState(() {
+        loading = true;
+      });
 
-    await Future.delayed(Duration(seconds: 1));
+      await categorieService.launchDebit(categoriNameController.text,
+          valueController.numberValue.toString(), widget.categoryid);
 
-    setState(() {
-      loading = false;
-    });
-
-    widget.addDebit(
-        categoriNameController.text, valueController.text, widget.index);
-    Navigator.pop(context);
+      widget.addDebit(categoriNameController.text,
+          valueController.numberValue.toString(), widget.index);
+      Navigator.pop(context);
+    } finally {
+      setState(() {
+        loading = false;
+      });
+    }
   }
 
   @override
