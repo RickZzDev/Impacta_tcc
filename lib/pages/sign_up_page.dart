@@ -1,7 +1,10 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:lottie/lottie.dart';
+import 'package:tcc_impacta/pages/home_page.dart';
+import 'package:tcc_impacta/service/login_service.dart';
 import 'package:tcc_impacta/service/sign_up_service.dart';
 import 'package:tcc_impacta/widgets/custom_text_field.dart';
 
@@ -17,6 +20,10 @@ class _SignUpState extends State<SignUp> {
 
   final TextEditingController nameController = TextEditingController();
 
+  final MoneyMaskedTextController monthlyIncomeController =
+      MoneyMaskedTextController(
+          leftSymbol: "R\$ ", decimalSeparator: ',', thousandSeparator: ".");
+
   final TextEditingController passwordEditingController =
       TextEditingController();
 
@@ -24,6 +31,8 @@ class _SignUpState extends State<SignUp> {
       TextEditingController();
 
   final SignUpService service = SignUpService();
+
+  final LoginService loginService = LoginService();
 
   bool loading = false;
 
@@ -90,16 +99,21 @@ class _SignUpState extends State<SignUp> {
 
       try {
         await service.register(
-          nameController.text,
-          emailController.text,
-          passwordEditingController.text,
-        );
+            nameController.text,
+            emailController.text,
+            passwordEditingController.text,
+            monthlyIncomeController.numberValue);
+
+        var jwt = await loginService.login(
+            emailController.text, passwordEditingController.text);
 
         changeLoading();
         Navigator.push(
             context,
             CupertinoPageRoute(
-              builder: (context) => const Scaffold(),
+              builder: (context) => HomePage(
+                jwt: jwt,
+              ),
             ));
       } catch (e) {
         changeLoading();
@@ -186,6 +200,16 @@ class _SignUpState extends State<SignUp> {
                     height: 32,
                   ),
                   CustomTextField(
+                    label: "Renda mensal",
+                    hint: "R\$ 10.0000,00",
+                    controller: monthlyIncomeController,
+                    icon: Icons.monetization_on,
+                    obscureText: false,
+                  ),
+                  const SizedBox(
+                    height: 32,
+                  ),
+                  CustomTextField(
                     label: "Senha",
                     hint: "*******",
                     obscureText: true,
@@ -223,7 +247,10 @@ class _SignUpState extends State<SignUp> {
                               ? const SizedBox(
                                   height: 16,
                                   width: 16,
-                                  child: CircularProgressIndicator())
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                  ),
+                                )
                               : Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: const [
